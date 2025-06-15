@@ -96,6 +96,7 @@ namespace MVC.WebAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginModel model)
         {
@@ -168,6 +169,41 @@ namespace MVC.WebAPI.Controllers
                 return Unauthorized();
             }
 
+        }
+        [Authorize]
+        [HttpPost("token/refresh")]
+        public async Task<IActionResult> Refresh(TokenModel tokenModel)
+        {
+            try
+            {
+                var principal = _tokenService.GetPrincipalFromExpiredToken(tokenModel.AccessToken);
+                var username = principal.Identity.Name;
+
+                var tokenInfo = _context.TokenInfos.SingleOrDefault(u => u.Username == username);
+                if (tokenInfo == null
+                    || tokenInfo.RefreshToken != tokenModel.RefreshToken
+                    || tokenInfo.ExpiredAt <= DateTime.UtcNow)
+                {
+                    return BadRequest("Invalid refresh token. Please login again.");
+                }
+
+                var newAccessToken = _tokenService.GenerateAccessToken(principal.Claims);
+                var newRefreshToken = _tokenService.GenerateRefreshToken();
+
+                tokenInfo.RefreshToken = newRefreshToken; // rotating the refresh token
+                await _context.SaveChangesAsync();
+
+                return Ok(new TokenModel
+                {
+                    AccessToken = newAccessToken,
+                    RefreshToken = newRefreshToken
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
     }
 }
