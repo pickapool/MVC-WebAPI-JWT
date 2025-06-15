@@ -205,5 +205,30 @@ namespace MVC.WebAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+        [HttpPost("token/revoke")]
+        [Authorize]
+        public async Task<IActionResult> Revoke()
+        {
+            try
+            {
+                var username = User.Identity.Name;
+
+                var user = _context.TokenInfos.SingleOrDefault(u => u.Username == username);
+                if (user == null)
+                {
+                    return BadRequest();
+                }
+
+                user.RefreshToken = string.Empty;
+                await _context.SaveChangesAsync();
+
+                return Ok(true);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }
