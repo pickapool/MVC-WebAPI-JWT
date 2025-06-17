@@ -1,8 +1,11 @@
+using MVC.Services.LoginServices;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration.GetValue<string>("BaseAPI")) });
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<ILoginService, LoginService>();
 
 var app = builder.Build();
 

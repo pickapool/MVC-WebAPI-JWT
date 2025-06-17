@@ -1,3 +1,7 @@
 ﻿@using MVC
 @using MVC.Models
+@using MVC.Services.LoginServices
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using MVC.Domain.Models
+@inject ILoginService _loginService
