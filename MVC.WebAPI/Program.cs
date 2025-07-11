@@ -71,5 +71,6 @@ void ApplyMigrations(IApplicationBuilder app)
 {
     using var scope = app.ApplicationServices.CreateScope();
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    dbContext.Database.Migrate();
+    if(dbContext.Database.GetPendingMigrations().Count() > 0)
+        dbContext.Database.Migrate();
 }
