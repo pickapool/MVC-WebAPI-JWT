@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MVC.Domain\MVC.Domain.csproj" />
+    <ProjectReference Include="..\MVC.Shared\MVC.Shared.csproj" />
   </ItemGroup>
 
 </Project>
