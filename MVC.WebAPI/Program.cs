@@ -64,4 +64,12 @@ app.MapControllers();
 
 await DbSeeder.SeedData(app);
 
+ApplyMigrations(app);
 app.Run();
+
+void ApplyMigrations(IApplicationBuilder app)
+{
+    using var scope = app.ApplicationServices.CreateScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    dbContext.Database.Migrate();
+}
