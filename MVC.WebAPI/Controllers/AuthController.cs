@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using MVC.Domain.Models;
 using MVC.Services.ApplicationDBContextService;
 using MVC.WebAPI.Commands.UserCommands.CreateCommand;
+using MVC.WebAPI.Commands.UserCommands.LoginCommand;
 using MVC.WebAPI.Services.TokenServices;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -45,76 +46,16 @@ namespace MVC.WebAPI.Controllers
         }
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginModel model)
+        public async Task<IActionResult> Login([FromBody] UserLoginCommand loginCommand)
         {
-            try
-            {
-                var user = await _userManager.FindByNameAsync(model.Username);
-                if (user == null)
-                {
-                    return BadRequest("Invalid username or password");
-                }
-                bool isValidPassword = await _userManager.CheckPasswordAsync(user, model.Password);
-                if (isValidPassword == false)
-                {
-                    return Unauthorized();
-                }
-
-                // creating the necessary claims
-                List<Claim> authClaims = [
-                        new (ClaimTypes.Name, user.UserName),
-                new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), 
-                // unique id for token
-        ];
-
-                var userRoles = await _userManager.GetRolesAsync(user);
-
-                // adding roles to the claims. So that we can get the user role from the token.
-                foreach (var userRole in userRoles)
-                {
-                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-                }
-
-                // generating access token
-                var token = _tokenService.GenerateAccessToken(authClaims);
-
-                string refreshToken = _tokenService.GenerateRefreshToken();
-
-                //save refreshToken with exp date in the database
-                var tokenInfo = _context.TokenInfos.
-                            FirstOrDefault(a => a.Username == user.UserName);
-
-                // If tokenInfo is null for the user, create a new one
-                if (tokenInfo == null)
-                {
-                    var ti = new TokenInfoModel
-                    {
-                        Username = user.UserName,
-                        RefreshToken = refreshToken,
-                        ExpiredAt = DateTime.UtcNow.AddDays(7)
-                    };
-                    _context.TokenInfos.Add(ti);
-                }
-                // Else, update the refresh token and expiration
-                else
-                {
-                    tokenInfo.RefreshToken = refreshToken;
-                    tokenInfo.ExpiredAt = DateTime.UtcNow.AddDays(7);
-                }
-
-                await _context.SaveChangesAsync();
-
-                return Ok(new TokenModel
-                {
-                    AccessToken = token,
-                    RefreshToken = refreshToken
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return Unauthorized();
-            }
+            var result = await _sender.Send(loginCommand);
+            if (result.IsSuccess)
+                return Ok(result.Value);
+            if (result.Error.Code == StatusCodes.Status400BadRequest)
+                return BadRequest(result.Error.Description);
+            if (result.Error.Code == StatusCodes.Status401Unauthorized)
+                return Unauthorized(result.Error.Description);
+            return StatusCode(500, result.Error.Description);
 
         }
         [Authorize]

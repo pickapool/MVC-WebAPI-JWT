@@ -4,5 +4,5 @@ using MVC.Shared;
 
 namespace MVC.WebAPI.Commands.UserCommands.CreateCommand
 {
-    public record class CreateAccountCommand(SignupModel? SignupModel) : IRequest<Result> { }
+    public record class CreateAccountCommand(SignupModel? request) : IRequest<Result> { }
 }

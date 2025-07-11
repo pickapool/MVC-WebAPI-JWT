@@ -9,9 +9,10 @@ namespace MVC.Services.LoginServices
         {
             _httpClient = httpClient;
         }
-        public async Task<TokenModel> Authenticate(LoginModel loginModel)
+        public async Task<TokenModel> Authenticate(LoginModel model)
         {
-            var response = await _httpClient.PostAsJsonAsync("/api/auth/login", loginModel);
+            var request = new { request = model };
+            var response = await _httpClient.PostAsJsonAsync("/api/auth/login", request);
             if (!response.IsSuccessStatusCode)
             {
                 var errorMessage = await response.Content.ReadAsStringAsync();

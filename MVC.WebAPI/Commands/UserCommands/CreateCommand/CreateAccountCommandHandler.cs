@@ -19,11 +19,11 @@ namespace MVC.WebAPI.Commands.UserCommands.CreateCommand
             _logger = logger;
         }
 
-        public async Task<Result> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(CreateAccountCommand command, CancellationToken cancellationToken)
         {
             try
             {
-                var existingUser = await _userManager.FindByNameAsync(request.SignupModel.Email);
+                var existingUser = await _userManager.FindByNameAsync(command.request.Email);
                 if (existingUser != null)
                 {
                     return UserErrors.UserExist(existingUser.Id);
@@ -42,14 +42,14 @@ namespace MVC.WebAPI.Commands.UserCommands.CreateCommand
 
                 ApplicationUserModel user = new()
                 {
-                    Email = request.SignupModel.Email,
+                    Email = command.request.Email,
                     SecurityStamp = Guid.NewGuid().ToString(),
-                    UserName = request.SignupModel.Email,
-                    Name = request.SignupModel.Name,
+                    UserName = command.request.Email,
+                    Name = command.request.Name,
                     EmailConfirmed = true
                 };
 
-                var createUserResult = await _userManager.CreateAsync(user, request.SignupModel.Password);
+                var createUserResult = await _userManager.CreateAsync(user, command.request.Password);
                 if (createUserResult.Succeeded == false)
                 {
                     var errors = createUserResult.Errors.Select(e => e.Description);
@@ -68,7 +68,7 @@ namespace MVC.WebAPI.Commands.UserCommands.CreateCommand
             }
             catch (Exception ex)
             {
-                return StatusCodeErrors.StatusCode(StatusCodes.Status500InternalServerError.ToString(), ex.Message);
+                return StatusCodeErrors.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
     }

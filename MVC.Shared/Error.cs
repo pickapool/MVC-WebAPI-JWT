@@ -1,9 +1,9 @@
 ﻿namespace MVC.Shared
 {
-    public sealed record Error(string Code, string Description)
+    public sealed record Error(int Code, string Description)
     {
-        public static readonly Error None = new(string.Empty, string.Empty);
-        public static readonly Error NullValue = new("Error.NullValue", "Null value was provided");
+        public static readonly Error None = new(400, string.Empty);
+        public static readonly Error NullValue = new(400, "Unkown Error");
 
         public static implicit operator Result(Error error) => Result.Failure(error);
 
