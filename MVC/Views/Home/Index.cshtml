@@ -3,6 +3,7 @@
 }
 @model LoginModel
 
+
 <div class="text-center">
     <form asp-controller="Home" asp-action="Login">
         <input asp-for="Username" />
@@ -12,5 +13,12 @@
     @if (ViewBag.ErrorMessage != null)
     {
         <p>@ViewBag.ErrorMessage</p>
+    }
+    @if (ViewBag.Token != null)
+    {
+        <script>
+            localStorage.setItem("token", "@ViewBag.Token");z
+            console.log("Token saved to localStorage:", localStorage.getItem("token"));
+        </script>
     }
 </div>

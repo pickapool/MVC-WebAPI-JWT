@@ -1,4 +1,7 @@
 using System.Diagnostics;
+using System.Text.Json;
+using System.Web.Helpers;
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Domain.Models;
 using MVC.Models;
@@ -26,14 +29,17 @@ public class HomeController : Controller
     {
         return View();
     }
+    [HttpPost]
     public async Task<IActionResult> Login(LoginModel login)
     {
         try
         {
             var response = await _loginService.Authenticate(login);
+            ViewBag.Token = JsonSerializer.Serialize(response);
             return View("Index");
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             ViewBag.ErrorMessage = ex.Message;
             return View("Index", login);
         }

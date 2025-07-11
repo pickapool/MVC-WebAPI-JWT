@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using MVC.Services.LoginServices;
 
 var builder = WebApplication.CreateBuilder(args);
