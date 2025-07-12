@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MVC.Shared.Extensions
 {
-    public static class ModelExtensions
+    public static class ObjectExtensions
     {
         public static object WrapModel(this object model, string key)
         {

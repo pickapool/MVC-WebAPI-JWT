@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Domain.Models;
 using MVC.Services.ApplicationDBContextService;
+using MVC.Shared;
 using MVC.WebAPI.Commands.UserCommands.CreateCommand;
 using MVC.WebAPI.Commands.UserCommands.LoginCommand;
 using MVC.WebAPI.Services.TokenServices;
@@ -48,9 +49,9 @@ namespace MVC.WebAPI.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginCommand loginCommand)
         {
-            var result = await _sender.Send(loginCommand);
+            Result result = await _sender.Send(loginCommand);
             if (result.IsSuccess)
-                return Ok(result.Value);
+                return Ok(result);
             if (result.Error.Code == StatusCodes.Status400BadRequest)
                 return BadRequest(result.Error.Description);
             if (result.Error.Code == StatusCodes.Status401Unauthorized)
