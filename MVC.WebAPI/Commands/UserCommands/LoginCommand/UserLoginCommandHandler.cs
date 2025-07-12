@@ -44,8 +44,8 @@ namespace MVC.WebAPI.Commands.UserCommands.LoginCommand
 
                 // creating the necessary claims
                 List<Claim> authClaims = [ 
-                    new (ClaimTypes.Name, user.UserName),
-                    new (ClaimTypes.Email, user.Email),
+                    new (JwtRegisteredClaimNames.Name, user.UserName),
+                    new (JwtRegisteredClaimNames.Email, user.Email),
                     new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                     ];
 

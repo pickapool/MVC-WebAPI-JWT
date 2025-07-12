@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+
+@model LoginModel
+
+<div class="text-center">
+    <form asp-controller="User" asp-action="Authenticate">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input asp-for="Username" />
+        <input asp-for="Password" type="password" />
+        <button type="submit">Login</button>
+    </form>
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <p>@ViewBag.ErrorMessage</p>
+    }
+</div>

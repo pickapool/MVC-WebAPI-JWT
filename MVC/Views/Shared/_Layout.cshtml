@@ -33,10 +33,11 @@
                 <div>
                     @if(User.Identity.IsAuthenticated)
                     {
-                        <span>@User.Identity.Name</span>
-                        <a asp-action="Logout">Sign out</a>
+                        <span>@(User.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Email).Value)</span>
+                        <a asp-controller="Home" asp-action="Logout">Sign out</a>
                     } else {
-                        <button asp-controller="Home" asp-action="Signup">Register</button>
+                        <a asp-controller="User" asp-action="Login">Sign In</a>
+                        <a asp-controller="Register" asp-action="Signup">Register</a>
                     }
                 </div>
             </div>
