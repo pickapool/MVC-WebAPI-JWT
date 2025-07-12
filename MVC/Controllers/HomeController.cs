@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using MVC.Domain.Models;
 using MVC.Models;
 using MVC.Services.LoginServices;
+using MVC.Services.TokenProviderServices;
 
 namespace MVC.Controllers;
 
@@ -13,11 +14,13 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private readonly IUserService _userService;
+    private readonly ITokenProvider _tokenProvider;
 
-    public HomeController(ILogger<HomeController> logger, IUserService userService)
+    public HomeController(ILogger<HomeController> logger, IUserService userService, ITokenProvider tokenProvider)
     {
         _logger = logger;
         _userService = userService;
+        _tokenProvider = tokenProvider;
     }
 
     public IActionResult Index()
@@ -35,7 +38,7 @@ public class HomeController : Controller
         try
         {
             var response = await _userService.Authenticate(login);
-            ViewBag.Token = JsonSerializer.Serialize(response);
+            _tokenProvider.SetToken(response);
             return View("Index");
         }
         catch (Exception ex)

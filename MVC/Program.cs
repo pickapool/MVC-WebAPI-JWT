@@ -1,17 +1,20 @@
 using Blazored.LocalStorage;
 using MVC.Services.BaseService;
 using MVC.Services.LoginServices;
+using MVC.Services.TokenProviderServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration.GetValue<string>("BaseAPI")) });
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddScoped<IBaseService, BaseService>();
-builder.Services.AddScoped<IUserService, UserService>();
-
 
 builder.Services.AddHttpClient();
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddScoped<IBaseService, BaseService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITokenProvider, TokenProvider>();
 
 var app = builder.Build();
 

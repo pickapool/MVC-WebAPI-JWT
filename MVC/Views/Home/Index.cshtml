@@ -6,6 +6,7 @@
 
 <div class="text-center">
     <form asp-controller="Home" asp-action="Login">
+        <div asp-validation-summary="All" class="text-danger"></div>
         <input asp-for="Username" />
         <input asp-for="Password" type="password" />
         <button type="submit">Login</button>
@@ -13,12 +14,5 @@
     @if (ViewBag.ErrorMessage != null)
     {
         <p>@ViewBag.ErrorMessage</p>
-    }
-    @if (ViewBag.Token != null)
-    {
-        <script>
-            localStorage.setItem("token", "@ViewBag.Token");z
-            console.log("Token saved to localStorage:", localStorage.getItem("token"));
-        </script>
     }
 </div>
