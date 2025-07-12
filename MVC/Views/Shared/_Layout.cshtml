@@ -21,7 +21,7 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark nav-home" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
@@ -34,10 +34,12 @@
                     @if(User.Identity.IsAuthenticated)
                     {
                         <span>@(User.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Email).Value)</span>
-                        <a asp-controller="Home" asp-action="Logout">Sign out</a>
+                        <a class="btn btn-primary shadow" asp-controller="Home" asp-action="Logout">Sign out</a>
                     } else {
-                        <a asp-controller="User" asp-action="Login">Sign In</a>
-                        <a asp-controller="Register" asp-action="Signup">Register</a>
+                        <div class="d-flex flex-row align-items-center">
+                            <a class="btn btn-primary" asp-controller="User" asp-action="Login">Sign In</a>
+                            <a class="btn btn-default" asp-controller="Register" asp-action="Signup">Register</a>
+                        </div>
                     }
                 </div>
             </div>
