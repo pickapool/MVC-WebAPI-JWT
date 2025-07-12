@@ -2,7 +2,7 @@
 
 namespace MVC.Services.LoginServices
 {
-    public interface ILoginService
+    public interface IUserService
     {
         Task<TokenModel> Authenticate(LoginModel loginModel);
     }

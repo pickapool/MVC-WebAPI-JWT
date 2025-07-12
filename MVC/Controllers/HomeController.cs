@@ -12,12 +12,12 @@ namespace MVC.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-    private readonly ILoginService _loginService;
+    private readonly IUserService _userService;
 
-    public HomeController(ILogger<HomeController> logger, ILoginService loginService)
+    public HomeController(ILogger<HomeController> logger, IUserService userService)
     {
         _logger = logger;
-        _loginService = loginService;
+        _userService = userService;
     }
 
     public IActionResult Index()
@@ -34,14 +34,14 @@ public class HomeController : Controller
     {
         try
         {
-            var response = await _loginService.Authenticate(login);
+            var response = await _userService.Authenticate(login);
             ViewBag.Token = JsonSerializer.Serialize(response);
             return View("Index");
         }
         catch (Exception ex)
         {
             ViewBag.ErrorMessage = ex.Message;
-            return View("Index", login);
+            return View("Index");
         }
     }
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
