@@ -43,7 +43,11 @@ namespace MVC.WebAPI.Commands.UserCommands.LoginCommand
                 }
 
                 // creating the necessary claims
-                List<Claim> authClaims = [ new (ClaimTypes.Name, user.UserName), new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),];
+                List<Claim> authClaims = [ 
+                    new (ClaimTypes.Name, user.UserName),
+                    new (ClaimTypes.Email, user.Email),
+                    new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                    ];
 
                 var userRoles = await _userManager.GetRolesAsync(user);
 

@@ -49,9 +49,9 @@ namespace MVC.WebAPI.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginCommand loginCommand)
         {
-            Result result = await _sender.Send(loginCommand);
+            Result<TokenModel> result = await _sender.Send(loginCommand);
             if (result.IsSuccess)
-                return Ok(result);
+                return Ok(result.Value);
             if (result.Error.Code == StatusCodes.Status400BadRequest)
                 return BadRequest(result.Error.Description);
             if (result.Error.Code == StatusCodes.Status401Unauthorized)
