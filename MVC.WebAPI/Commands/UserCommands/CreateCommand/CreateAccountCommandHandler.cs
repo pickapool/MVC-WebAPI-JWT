@@ -23,10 +23,10 @@ namespace MVC.WebAPI.Commands.UserCommands.CreateCommand
         {
             try
             {
-                var existingUser = await _userManager.FindByNameAsync(command.request.Email);
+                var existingUser = await _userManager.FindByEmailAsync(command.request.Email);
                 if (existingUser != null)
                 {
-                    return UserErrors.UserExist(existingUser.Id);
+                    return UserErrors.UserExist(existingUser.Email);
                 }
                 if (await _roleManager.RoleExistsAsync(Roles.User) == false)
                 {

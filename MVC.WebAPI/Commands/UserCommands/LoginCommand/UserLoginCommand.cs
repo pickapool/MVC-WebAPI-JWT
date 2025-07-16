@@ -4,5 +4,5 @@ using MVC.Shared;
 
 namespace MVC.WebAPI.Commands.UserCommands.LoginCommand
 {
-    public record class UserLoginCommand(LoginModel? request) : IRequest<Result<TokenModel>> { }
+    public record class UserLoginCommand(LoginModel? request) : IRequest<Result<TokenModel>>;
 }
