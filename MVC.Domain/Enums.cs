@@ -20,7 +20,7 @@ namespace MVC.Domain
             GET,
             POST,
             DELETE,
-            UPDATE
+            PUT
         }
     }
 }
