@@ -4,15 +4,18 @@
 
 @model LoginModel
 
-<div class="text-center">
-    <form asp-controller="User" asp-action="Authenticate">
+<div class="card shadow p-4 d-grid m-auto col col-lg-4 h-100">
+    <label>LOGIN TO CONTINUE</label>
+    <form class="form d-flex flex-column text-start gap-2 pa-2" asp-controller="User" asp-action="Authenticate">
         <div asp-validation-summary="All" class="text-danger"></div>
-        <input asp-for="Username" />
-        <input asp-for="Password" type="password" />
-        <button type="submit">Login</button>
+        <label>Username</label>
+        <input class="form-control" asp-for="Username" />
+        <label>Password</label>
+        <input class="form-control" asp-for="Password" type="password" />
+        <button class="btn btn-primary" type="submit">Login</button>
     </form>
     @if (ViewBag.ErrorMessage != null)
     {
-        <p>@ViewBag.ErrorMessage</p>
+        <label class="text-center mt-2">@ViewBag.ErrorMessage</label>
     }
 </div>
