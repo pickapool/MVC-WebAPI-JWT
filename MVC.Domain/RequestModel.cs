@@ -8,6 +8,5 @@ namespace MVC.Domain
         public string? RequestUrl { get; set; }
         public string? AccessToken { get; set; }
         public object? Data { get; set; }
-
     }
 }

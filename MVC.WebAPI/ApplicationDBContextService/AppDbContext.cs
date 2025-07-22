@@ -13,6 +13,9 @@ namespace MVC.Services.ApplicationDBContextService
     public class AppDbContext : IdentityDbContext<ApplicationUserModel>
     {
         public DbSet<TokenInfoModel> TokenInfos { get; set; }
+        public DbSet<PatientModel> Patients { get; set; }
+        public DbSet<PatientMedicineModel> PatientMedicines { get; set; }
+        public DbSet<MedicineModel> Medicines { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
 
@@ -33,6 +36,10 @@ namespace MVC.Services.ApplicationDBContextService
             // Rename your own table
             builder.Entity<ApplicationUserModel>().ToTable("Users");
             builder.Entity<TokenInfoModel>().ToTable("TokenInfos");
+
+            builder.Entity<PatientModel>().ToTable("Patients");
+            builder.Entity<PatientMedicineModel>().ToTable("PatientMedicines");
+            builder.Entity<MedicineModel>().ToTable("Medicines");
         }
     }
 }
