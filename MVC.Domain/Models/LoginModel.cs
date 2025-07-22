@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MVC.Domain.Models
 {
-   public class LoginModel
+   public record class LoginModel
    {
         [Required]
         public string Username { get; set; } = string.Empty;

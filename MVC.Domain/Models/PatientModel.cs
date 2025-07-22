@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace MVC.Domain.Models
 {
     [Table("Patients")]
-    public class PatientModel
+    public record class PatientModel
     {
         [Key]
         public long? PatientId { get; set; }

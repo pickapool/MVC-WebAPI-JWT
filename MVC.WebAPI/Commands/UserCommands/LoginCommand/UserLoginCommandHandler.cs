@@ -5,28 +5,30 @@ using MVC.Domain.Models;
 using MVC.Services.ApplicationDBContextService;
 using MVC.Shared;
 using MVC.WebAPI.Constants;
+using MVC.WebAPI.Interfaces;
 using MVC.WebAPI.Services.TokenServices;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace MVC.WebAPI.Commands.UserCommands.LoginCommand
 {
-    public class UserLoginCommandHandler : IRequestHandler<UserLoginCommand, Result<TokenModel>>
+    public class UserLoginCommandHandler : AppDatabaseBase, IRequestHandler<UserLoginCommand, Result<TokenModel>>
     {
         private readonly UserManager<ApplicationUserModel> _userManager;
         private readonly ILogger<UserLoginCommandHandler> _logger;
         private readonly ITokenService _tokenService;
-        private readonly AppDbContext _context;
-        public UserLoginCommandHandler(UserManager<ApplicationUserModel> userManager,
-                                       ILogger<UserLoginCommandHandler> logger,
-                                       ITokenService tokenService,
-                                       AppDbContext context)
+
+        public UserLoginCommandHandler(
+            AppDbContext context, 
+            UserManager<ApplicationUserModel> userManager,
+            ILogger<UserLoginCommandHandler> logger,
+            ITokenService tokenService) : base(context)
         {
             _userManager = userManager;
             _logger = logger;
             _tokenService = tokenService;
-            _context = context;
         }
+
         public async Task<Result<TokenModel>> Handle(UserLoginCommand command, CancellationToken cancellationToken)
         {
             try
@@ -63,7 +65,7 @@ namespace MVC.WebAPI.Commands.UserCommands.LoginCommand
                 string refreshToken = _tokenService.GenerateRefreshToken();
 
                 //save refreshToken with exp date in the database
-                var tokenInfo = _context.TokenInfos.FirstOrDefault(a => a.Username == user.UserName);
+                var tokenInfo = GetDBContext().TokenInfos.FirstOrDefault(a => a.Username == user.UserName);
 
                 // If tokenInfo is null for the user, create a new one
                 if (tokenInfo == null)
@@ -74,7 +76,7 @@ namespace MVC.WebAPI.Commands.UserCommands.LoginCommand
                         RefreshToken = refreshToken,
                         ExpiredAt = DateTime.UtcNow.AddDays(7)
                     };
-                    _context.TokenInfos.Add(ti);
+                    GetDBContext().TokenInfos.Add(ti);
                 }
                 // Else, update the refresh token and expiration
                 else
@@ -83,7 +85,7 @@ namespace MVC.WebAPI.Commands.UserCommands.LoginCommand
                     tokenInfo.ExpiredAt = DateTime.UtcNow.AddDays(7);
                 }
 
-                await _context.SaveChangesAsync();
+                await GetDBContext().SaveChangesAsync();
 
                 var tokens = new TokenModel();
                 tokens.AccessToken = token;

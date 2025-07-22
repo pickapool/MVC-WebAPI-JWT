@@ -1,6 +1,4 @@
-﻿using MVC.Shared;
-
-namespace MVC.Domain
+﻿namespace MVC.Domain
 {
     public class RequestModel
     {

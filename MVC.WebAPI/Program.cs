@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MVC.Domain.Models;
 using MVC.Services.ApplicationDBContextService;
+using MVC.WebAPI.Controllers;
 using MVC.WebAPI.Data;
+using MVC.WebAPI.Interfaces;
 using MVC.WebAPI.Services.TokenServices;
 using System.Text;
 
@@ -43,6 +45,7 @@ builder.Services.AddMediatR(config =>
 {
     config.RegisterServicesFromAssembly(typeof(Program).Assembly);
 });
+
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
