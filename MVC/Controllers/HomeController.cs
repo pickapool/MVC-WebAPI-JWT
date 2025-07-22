@@ -31,6 +31,10 @@ public class HomeController : Controller
     {
          return View();
     }
+    public IActionResult Patients()
+    {
+        return View();
+    }
 
     public IActionResult Privacy()
     {

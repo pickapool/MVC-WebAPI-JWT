@@ -25,7 +25,7 @@ namespace MVC.Controllers
         {
             if(User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Patients", "Patient");
             }
             return View();
         }
@@ -33,10 +33,12 @@ namespace MVC.Controllers
         {
             try
             {
+                if(!ModelState.IsValid)
+                    return View("Login", login);
                 var response = await _userService.Authenticate(login);
                 _tokenProvider.SetToken(response);
                 await HttpContextSignIn(response);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Patients", "Patient");
             }
             catch (Exception ex)
             {
