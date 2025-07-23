@@ -26,9 +26,6 @@ namespace MVC.Controllers
         }
         public async Task<IActionResult> Patients()
         {
-            TokenModel token = _tokenProvider.GetToken();
-            if(token != null)
-                await HttpContextSignIn(token);
             if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Login", "User");
             await GetPatients();
@@ -71,20 +68,6 @@ namespace MVC.Controllers
                 ViewBag.ErrorMessage = ex.Message;
                 return RedirectToAction("Patients", "Patient");
             }
-        }
-        private async Task HttpContextSignIn(TokenModel token)
-        {
-            var handler = new JwtSecurityTokenHandler();
-
-            var currentToken = handler.ReadJwtToken(token.AccessToken);
-
-            var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Email, currentToken.Claims.FirstOrDefault(claim => claim.Type == JwtRegisteredClaimNames.Email).Value));
-            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Name, currentToken.Claims.FirstOrDefault(claim => claim.Type == JwtRegisteredClaimNames.Name).Value));
-            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Jti, currentToken.Claims.FirstOrDefault(claim => claim.Type == JwtRegisteredClaimNames.Jti).Value));
-
-            var principal = new ClaimsPrincipal(identity);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
         }
     }
 }
