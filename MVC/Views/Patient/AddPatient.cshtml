@@ -1,0 +1,29 @@
+﻿
+@model PatientModel
+
+<div class="card shadow p-4 d-grid m-auto col col-lg-4 h-100">
+    <label>Patient Information</label>
+    <form class="form d-flex flex-column text-start gap-2 pa-2" asp-controller="Patient" asp-action="AddCurrentPatient">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input class="form-control" type="hidden" asp-for="PatientId" />
+        <label>Name</label>
+        <input class="form-control" asp-for="PatientName" />
+        <label>Room</label>
+        <input class="form-control" asp-for="RoomName" />
+        <label>Bed</label>
+        <input class="form-control" asp-for="BedNumber" />
+        <button class="btn btn-primary" type="submit">
+            @if(Model.PatientId == null)
+            {
+                <span>ADD</span>
+            } else
+            {
+                <span>UPDATE</span>
+            }
+        </button>
+    </form>
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <label class="text-center mt-2">@ViewBag.ErrorMessage</label>
+    }
+</div>

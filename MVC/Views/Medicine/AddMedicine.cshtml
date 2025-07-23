@@ -1,0 +1,27 @@
+﻿@model MedicineModel
+
+<div class="card shadow p-4 d-grid m-auto col col-lg-4 h-100">
+    <label>Medicine Information</label>
+    <form class="form d-flex flex-column text-start gap-2 pa-2" asp-controller="Medicine" asp-action="AddCurrentMedicine">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input class="form-control" type="hidden" asp-for="MedicineId" />
+        <label>Medicine</label>
+        <input class="form-control" asp-for="MedicineName" />
+        <label>QR Code</label>
+        <input class="form-control" asp-for="QRCode" />
+        <button class="btn btn-primary" type="submit">
+            @if (Model.MedicineId == null)
+            {
+                <span>ADD</span>
+            }
+            else
+            {
+                <span>UPDATE</span>
+            }
+        </button>
+    </form>
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <label class="text-center mt-2">@ViewBag.ErrorMessage</label>
+    }
+</div>

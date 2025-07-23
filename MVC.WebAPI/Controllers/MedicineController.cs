@@ -1,33 +1,33 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MVC.WebAPI.Commands.PatientCommands;
-using MVC.WebAPI.Commands.PatientCommands.AddPatient;
-using MVC.WebAPI.Commands.PatientCommands.DeletePatient;
-using MVC.WebAPI.Commands.PatientCommands.PatientGetByID;
-using MVC.WebAPI.Commands.PatientCommands.UpdateCommand;
+using MVC.WebAPI.Commands.MedicineCommands;
+using MVC.WebAPI.Commands.MedicineCommands.AddMedicine;
+using MVC.WebAPI.Commands.MedicineCommands.DeletMedicine;
+using MVC.WebAPI.Commands.MedicineCommands.UpdateMedicine;
+using MVC.WebAPI.Commands.MedicineGetById.PatientGetByID;
 
 namespace MVC.WebAPI.Controllers
 {
-    [Route("api/patient/")]
+    [Route("api/medicine/")]
     [ApiController]
     [AllowAnonymous]
-    public class PatientController : ControllerBase
+    public class MedicineController : ControllerBase
     {
         private readonly ISender _sender;
-        public PatientController(ISender sender)
+        public MedicineController(ISender sender)
         {
             _sender = sender;
         }
 
         [HttpPost("add")]
-        public async Task<IActionResult> Add([FromBody] AddPatientCommand command)
+        public async Task<IActionResult> Add([FromBody] AddMedicineCommand command)
         {
             var result = await _sender.Send(command);
             return Ok(result.Value);
         }
         [HttpPut("update")]
-        public async Task<IActionResult> Update([FromBody] UpdatePatientCommand command)
+        public async Task<IActionResult> Update([FromBody] UpdateMedicineCommand command)
         {
             var result = await _sender.Send(command);
             return Ok(result.Value);
@@ -40,7 +40,7 @@ namespace MVC.WebAPI.Controllers
             return Ok(result.Value);
         }
         [HttpDelete("delete")]
-        public async Task<IActionResult> Delete([FromBody] DeletePatientQuery query)
+        public async Task<IActionResult> Delete([FromBody] DeleteMedicineQuery query)
         {
             var result = await _sender.Send(query);
             if(result.Error.Code == StatusCodes.Status400BadRequest)
@@ -48,24 +48,15 @@ namespace MVC.WebAPI.Controllers
             return Ok(result.Value);
         }
         [HttpGet]
-        [Route("getid/{patientId}")]
-        public async Task<IActionResult> GetById(long? patientId)
+        [Route("getid/{MedicineId}")]
+        public async Task<IActionResult> GetById(long? MedicineId)
         {
-            GetPatientByIDQuery query = new(patientId);
+            GetMedicineByIDQuery query = new(MedicineId);
 
             var result = await _sender.Send(query);
             if (result.IsFailure)
                 return BadRequest(result.Error.Description);
             return Ok(result.Value);
         }
-        [HttpGet("getmedicines/{qr}")]
-        public async Task<IActionResult> GetMedicines(string qr)
-        {
-            GetPatientsMedicineQuery query = new(qr);
-
-            var result = await _sender.Send(query);
-            return Ok(result.Value);
-        }
-
     }
 }

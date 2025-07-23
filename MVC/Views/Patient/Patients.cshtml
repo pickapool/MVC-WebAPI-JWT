@@ -1,4 +1,43 @@
 ﻿@{
     ViewData["Title"] = "Patients";
 }
-<span>LIst</span>
+
+@model List<PatientModel>
+
+<a asp-controller="Patient" asp-action="AddPatient" class="btn btn-primary border rounded mb-3">Add</a>
+<div class="d-grid m-auto h-100">
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <label class="text-error">
+            @ViewBag.ErrorMessage
+        </label>
+    }
+    <table class="table table-bordered paper shadow h-100">
+        <thead>
+        <tr>
+            <th class="text-center">Patient Name</th>
+            <th class="text-center">Patient Room</th>
+            <th class="text-center">Patient Bed</th>
+            <th class="text-center">Created</th>
+            <th class="text-center">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.PatientName</td>
+                <td class="text-center">@item.RoomName</td>
+                <td class="text-center">@item.BedNumber</td>
+                <td class="text-center">@item.CreatedDate.ToString()</td>
+                <td class="d-flex justify-content-center gap-2">
+                    <a class="btn border rounded" asp-controller="Patient"  asp-action="DeletePatient" asp-route-patientId="@item.PatientId">Delete</a>
+                    <a class="btn btn-primary border rounded"  asp-controller="Patient" asp-action="UpdatePatient" asp-route-patientId="@item.PatientId">Update</a>
+                    <a class="btn btn-success border rounded">Medicines</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+    

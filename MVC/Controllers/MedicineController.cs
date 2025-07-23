@@ -2,74 +2,75 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Domain.Models;
+using MVC.Services.MedicineServices;
 using MVC.Services.PatientServices;
 using MVC.Services.TokenProviderServices;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace MVC.Controllers
 {
-    public class PatientController : Controller
+    public class MedicineController : Controller
     {
-        private readonly IPatientService _patientService;
+        private readonly IMedicineService _medicineService;
         private readonly ITokenProvider _tokenProvider;
-        List<PatientModel> _patients = new();
-        private async Task GetPatients()
+        List<MedicineModel> medicines = new();
+        private async Task GetMedicines()
         {
-            _patients = await _patientService.GetAll<List<PatientModel>>();
+            medicines = await _medicineService.GetAll<List<MedicineModel>>();
         }
-        public PatientController(IPatientService patientService, ITokenProvider provider)
+        public MedicineController(IMedicineService medicineService, ITokenProvider provider)
         {
-            _patientService = patientService;
+            _medicineService = medicineService;
             _tokenProvider = provider;
         }
-        public async Task<IActionResult> Patients()
+        public async Task<IActionResult> Medicines()
         {
             TokenModel token = _tokenProvider.GetToken();
-            if(token != null)
+            if (token != null)
                 await HttpContextSignIn(token);
             if (!User.Identity.IsAuthenticated)
-                return RedirectToAction("Login", "User");
-            await GetPatients();
-            return View(_patients);
+                return RedirectToAction("Medicines", "Medicine");
+            await GetMedicines();
+            return View(medicines);
         }
-        public IActionResult AddPatient()
+        public IActionResult AddMedicine()
         {
-            return View(new PatientModel());
+            return View(new MedicineModel());
         }
-        public async Task<IActionResult> UpdatePatient(long? patientId)
+        public async Task<IActionResult> UpdateMedicine(long? medicineId)
         {
-            var patient = await _patientService.GetById<PatientModel>(patientId);
-            return View("AddPatient", patient);
+            var medicine = await _medicineService.GetById<MedicineModel>(medicineId);
+            return View("AddMedicine", medicine);
         }
-        public async Task<IActionResult> DeletePatient(long? patientId)
-        {
-            try
-            {
-                var result = await _patientService.Delete<long?>(patientId);
-                await GetPatients();
-                return View("Patients", _patients);
-            }
-            catch (Exception ex) {
-                ViewBag.ErrorMessage = ex.Message;
-                return RedirectToAction("Patients", "Patient");
-            }
-        }
-        public async Task<IActionResult> AddCurrentPatient(PatientModel patient)
+        public async Task<IActionResult> DeleteMedicine(long? medicineId)
         {
             try
             {
-                var result = patient.PatientId == null ? 
-                    await _patientService.Create<PatientModel>(patient) :
-                    await _patientService.Update<PatientModel>(patient);
-                await GetPatients();
-                return View("AddPatient", new PatientModel());
+                var result = await _medicineService.Delete<long?>(medicineId);
+                await GetMedicines();
+                return View("Medicines", medicines);
             }
             catch (Exception ex)
             {
                 ViewBag.ErrorMessage = ex.Message;
-                return RedirectToAction("Patients", "Patient");
+                return RedirectToAction("Medicines", "Medicine");
+            }
+        }
+        public async Task<IActionResult> AddCurrentMedicine(MedicineModel medicine)
+        {
+            try
+            {
+                var result = medicine.MedicineId == null ?
+                    await _medicineService.Create<MedicineModel>(medicine) :
+                    await _medicineService.Update<MedicineModel>(medicine);
+                await GetMedicines();
+                return View("AddMedicine", new MedicineModel());
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return RedirectToAction("Medicines", "Medicine");
             }
         }
         private async Task HttpContextSignIn(TokenModel token)

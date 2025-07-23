@@ -7,13 +7,13 @@ using MVC.WebAPI.Interfaces;
 
 namespace MVC.WebAPI.Commands.PatientCommands
 {
-    public class GetPatientQueryhandler : AppDatabaseBase, IRequestHandler<GetPatientQuery, Result<IEnumerable<PatientModel>>>
+    public class GetListMedicineQueryHandler : AppDatabaseBase, IRequestHandler<GetListMedicineQuery, Result<IEnumerable<PatientModel>>>
     {
-        public GetPatientQueryhandler(AppDbContext context) : base(context)
+        public GetListMedicineQueryHandler(AppDbContext context) : base(context)
         {
         }
 
-        public async Task<Result<IEnumerable<PatientModel>>> Handle(GetPatientQuery request, CancellationToken cancellationToken)
+        public async Task<Result<IEnumerable<PatientModel>>> Handle(GetListMedicineQuery request, CancellationToken cancellationToken)
         {
             var list = await GetDBContext().Patients.ToListAsync();
             return Result.Success(list.AsEnumerable());

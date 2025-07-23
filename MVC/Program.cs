@@ -2,6 +2,8 @@ using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using MVC.Services.BaseService;
 using MVC.Services.LoginServices;
+using MVC.Services.MedicineServices;
+using MVC.Services.PatientServices;
 using MVC.Services.TokenProviderServices;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +18,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IBaseService, BaseService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenProvider, TokenProvider>();
+builder.Services.AddScoped<IPatientService, PatientService>();
+builder.Services.AddScoped<IMedicineService,  MedicineService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

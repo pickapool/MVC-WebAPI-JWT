@@ -29,14 +29,16 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-         return View();
+        if (!User.Identity.IsAuthenticated)
+            return RedirectToAction("Login", "User");
+        return View();
     }
     public IActionResult Patients()
     {
         return View();
     }
 
-    public IActionResult Privacy()
+    public IActionResult Medicine()
     {
         return View();
     }

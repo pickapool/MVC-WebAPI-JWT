@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "Medicines";
+}
+
+@model List<MedicineModel>
+
+<a asp-controller="Medicine" asp-action="AddMedicine" class="btn btn-primary border rounded mb-3">Add</a>
+<div class="d-grid m-auto h-100">
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <label class="text-error">
+            @ViewBag.ErrorMessage
+        </label>
+    }
+    <table class="table table-bordered paper shadow h-100">
+        <thead>
+            <tr>
+                <th class="text-center">Medicine Name</th>
+                <th class="text-center">QR Code</th>
+                <th class="text-center">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.MedicineName</td>
+                    <td class="text-center">@item.QRCode</td>
+                    <td class="d-flex justify-content-center gap-2">
+                        <a class="btn border rounded" asp-controller="Medicine" asp-action="DeleteMedicine" asp-route-MedicineId="@item.MedicineId">Delete</a>
+                        <a class="btn btn-primary border rounded" asp-controller="Medicine" asp-action="UpdateMedicine" asp-route-MedicineId="@item.MedicineId">Update</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

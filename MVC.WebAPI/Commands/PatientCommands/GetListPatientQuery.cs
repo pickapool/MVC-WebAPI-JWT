@@ -4,5 +4,5 @@ using MVC.Shared;
 
 namespace MVC.WebAPI.Commands.PatientCommands
 {
-    public record class GetPatientQuery() : IRequest<Result<IEnumerable<PatientModel>>>;
+    public record class GetListMedicineQuery() : IRequest<Result<IEnumerable<PatientModel>>>;
 }

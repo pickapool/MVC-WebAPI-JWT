@@ -7,6 +7,5 @@ namespace MVC.WebAPI.Commands.PatientCommands.AddPatient
     public record class AddPatientCommand(
         string patientName,
         string roomName,
-        string bedNumber,
-        DateTime? dateCreate) : IRequest<long?>;
+        string bedNumber) : IRequest<long?>;
 }

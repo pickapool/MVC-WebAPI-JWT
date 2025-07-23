@@ -13,6 +13,7 @@ namespace MVC.Services.BaseService
             _httpClientFactory = httpClientFactory;
         }
         public async Task<T> SendAsync<T>(RequestModel request)
+        
         {
             HttpClient httpClient = _httpClientFactory.CreateClient("WebAPI");
             HttpRequestMessage message = new();

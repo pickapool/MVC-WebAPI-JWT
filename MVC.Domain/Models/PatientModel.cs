@@ -13,8 +13,11 @@ namespace MVC.Domain.Models
     {
         [Key]
         public long? PatientId { get; set; }
+        [Required]
         public string? PatientName { get; set; }
+        [Required]
         public string? RoomName { get; set; }
+        [Required]
         public string? BedNumber { get; set; }
         public DateTime? CreatedDate { get; set; }
         [ForeignKey(nameof(PatientId))]
